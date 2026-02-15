@@ -26,8 +26,8 @@
 
 1.  **Clone the Repository**:
     ```bash
-    git clone https://github.com/chandana-builds/Real-Time-Speech-Text-Translator.git
-    cd Real-Time-Speech-Text-Translator
+    git clone https://github.com/chandana-builds/Voice-Bridge.git
+    cd Voice-Bridge
     ```
 
 2.  **Open the App**:
