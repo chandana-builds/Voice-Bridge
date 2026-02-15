@@ -220,9 +220,10 @@ listenOutputBtn.addEventListener('click', () => {
   // Switch to translate.google.com with client=tw-ob (often more reliable for simple requests)
   const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${langCode}&client=tw-ob`;
 
-  console.log('Attempting to play audio from:', url);
-
-  const audio = new Audio(url);
+  // Create an audio element and set referrerPolicy to avoid blocking on hosted sites
+  const audio = document.createElement('audio');
+  audio.referrerPolicy = 'no-referrer';
+  audio.src = url;
 
   setStatus(`Playing audio (${targetLoc})…`, { live: true });
 
