@@ -277,8 +277,13 @@ function playNativeTTS(text, locale) {
   };
 
   utterance.onerror = (e) => {
+    // Ignore errors caused by interrupting previous speech
+    if (e.error === 'interrupted' || e.error === 'canceled') {
+      console.log('Native TTS interrupted/canceled (intentional).');
+      return;
+    }
     console.error('Native TTS error:', e);
-    setStatus('Error playing audio (Native).', { error: true });
+    setStatus('Error playing audio (Native): ' + e.error, { error: true });
   };
 
   window.speechSynthesis.speak(utterance);
