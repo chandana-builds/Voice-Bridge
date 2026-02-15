@@ -217,8 +217,8 @@ listenOutputBtn.addEventListener('click', () => {
   // Extract 2-letter language code for Google TTS (e.g., "hi" from "hi-IN")
   const langCode = targetLoc.split('-')[0];
 
-  // Using 'gtx' client often works better than 'tw-ob' for unofficial usage
-  const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${langCode}&q=${encodeURIComponent(text)}`;
+  // Switch to translate.google.com with client=tw-ob (often more reliable for simple requests)
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${langCode}&client=tw-ob`;
 
   console.log('Attempting to play audio from:', url);
 
