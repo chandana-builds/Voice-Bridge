@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Real-Time Speech & Text Translator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="shell">
+    <div class="shell-inner">
+      <div class="header-row">
+        <div class="title-block">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            Live Multilingual Translation
+          </div>
+          <h2>Voice Bridge</h2>
+          <p class="subtitle">
+            One user speaks or types, another listens and reads in their language — in real time.
+          </p>
+        </div>
+      </div>
+
+      <div class="lang-panel">
+        <div class="lang-card">
+          <div class="lang-label">Input language · Speaker side</div>
+          <div class="lang-role">Spoken or typed source</div>
+          <div class="select-wrap">
+            <select id="fromLang">
+              <!-- BCP-47 locales for STT -->
+              <option value="en-US">English (US)</option>
+              <option value="en-GB">English (UK)</option>
+              <option value="hi-IN">Hindi (India)</option>
+              <option value="bn-IN">Bengali (India)</option>
+              <option value="ta-IN">Tamil (India)</option>
+              <option value="te-IN">Telugu (India)</option>
+              <option value="mr-IN">Marathi (India)</option>
+              <option value="gu-IN">Gujarati (India)</option>
+              <option value="pa-IN">Punjabi (Gurmukhi, India)</option>
+              <option value="es-ES">Spanish (Spain)</option>
+              <option value="es-MX">Spanish (Mexico)</option>
+              <option value="fr-FR">French (France)</option>
+              <option value="de-DE">German (Germany)</option>
+              <option value="it-IT">Italian (Italy)</option>
+              <option value="pt-BR">Portuguese (Brazil)</option>
+              <option value="ru-RU">Russian</option>
+              <option value="zh-CN">Chinese (Mandarin, Simplified)</option>
+              <option value="ja-JP">Japanese</option>
+              <option value="ko-KR">Korean</option>
+            </select>
+            <span class="select-icon">⌄</span>
+          </div>
+        </div>
+
+        <div class="lang-card">
+          <div class="lang-label">Output language · Listener side</div>
+          <div class="lang-role">Translated text & speech</div>
+          <div class="select-wrap">
+            <select id="toLang">
+              <!-- ISO codes for translation/TTS -->
+              <option value="en-US">English (US)</option>
+              <option value="en-GB">English (UK)</option>
+              <option value="hi-IN">Hindi (India)</option>
+              <option value="bn-IN">Bengali (India)</option>
+              <option value="ta-IN">Tamil (India)</option>
+              <option value="te-IN">Telugu (India)</option>
+              <option value="mr-IN">Marathi (India)</option>
+              <option value="gu-IN">Gujarati (India)</option>
+              <option value="pa-IN">Punjabi (Gurmukhi, India)</option>
+              <option value="es-ES">Spanish (Spain)</option>
+              <option value="es-MX">Spanish (Mexico)</option>
+              <option value="fr-FR">French (France)</option>
+              <option value="de-DE">German (Germany)</option>
+              <option value="it-IT">Italian (Italy)</option>
+              <option value="pt-BR">Portuguese (Brazil)</option>
+              <option value="ru-RU">Russian</option>
+              <option value="zh-CN">Chinese (Mandarin, Simplified)</option>
+              <option value="ja-JP">Japanese</option>
+              <option value="ko-KR">Korean</option>
+            </select>
+            <span class="select-icon">⌄</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button id="startBtn" class="btn btn-primary">
+          <span class="btn-icon-dot"></span>
+          <span>Start Mic</span>
+        </button>
+        <button id="stopBtn" class="btn btn-secondary" disabled>
+          <span class="btn-icon-mic">⏹</span>
+          <span>Stop & Translate</span>
+        </button>
+        <div class="status" id="status">
+          <span class="status-dot"></span>
+          <strong>Idle.</strong>
+        </div>
+      </div>
+
+      <div class="body-grid">
+        <!-- LEFT: input side (speech + text) -->
+        <div class="pane">
+          <div class="pane-header">
+            <div class="pane-title">Speaker Input</div>
+            <span class="badge">Speech & text</span>
+          </div>
+
+          <div class="input-block">
+            <label class="input-label" for="inputText">
+              Type text (alternative to speaking)
+            </label>
+            <textarea id="inputText" rows="3"
+              placeholder="Type here if you don’t want to use the microphone..."></textarea>
+            <div class="input-actions">
+              <button id="translateTextBtn" class="btn btn-secondary small">
+                Translate Typed Text
+              </button>
+            </div>
+          </div>
+
+          <div class="subpane-title">Latest recognized speech</div>
+          <div class="scroll-region" id="recognizedPane"></div>
+        </div>
+
+        <!-- RIGHT: translated output side -->
+        <div class="pane">
+          <div class="pane-header">
+            <div class="pane-title">Translated Output</div>
+            <span class="badge">Text & audio</span>
+          </div>
+
+          <div class="output-main">
+            <div class="output-text" id="outputText">
+              <!-- last translation text -->
+            </div>
+            <div class="output-controls">
+              <button id="listenOutputBtn" class="btn btn-secondary small">
+                🔊 Listen to Translation
+              </button>
+            </div>
+          </div>
+
+          <div class="subpane-title">Conversation history</div>
+          <div class="scroll-region" id="conversation"></div>
+        </div>
+      </div>
+
+      <p class="hint">
+        Speak, or type text, in the left panel. When you stop the mic or press
+        “Translate Typed Text”, the translation appears on the right and can be played aloud.
+      </p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
