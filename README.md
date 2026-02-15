@@ -4,7 +4,7 @@
 
 🚀 **[Live Demo](https://voice-bridge-teal.vercel.app/)**
 
-![App Screenshot](image.png) 
+![App Screenshot](image.png)
 
 ## ✨ Features
 
@@ -39,3 +39,11 @@
     -   Click **Start Mic** and speak, or type in the text box.
     -   The app will automatically translate your speech/text.
     -   Click **Listen to Translation** to hear the result.
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
