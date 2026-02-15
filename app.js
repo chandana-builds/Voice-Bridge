@@ -214,7 +214,10 @@ listenOutputBtn.addEventListener('click', () => {
   // The API generally handles full locales well for accents.
   const targetLoc = toLangEl.value;
 
-  const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${targetLoc}&client=tw-ob`;
+  // Using 'gtx' client often works better than 'tw-ob' for unofficial usage
+  const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${targetLoc}&q=${encodeURIComponent(text)}`;
+
+  console.log('Attempting to play audio from:', url);
 
   const audio = new Audio(url);
 
