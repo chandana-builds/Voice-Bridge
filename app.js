@@ -202,7 +202,7 @@ async function handleTranslationProcess(text, source) {
   }
 }
 
-// Text-to-speech for translated output (using unofficial Google Translate TTS API)
+// Hybrid TTS: Google -> Native Fallback
 listenOutputBtn.addEventListener('click', () => {
   const text = outputTextEl.textContent.trim();
   if (!text) {
@@ -210,34 +210,76 @@ listenOutputBtn.addEventListener('click', () => {
     return;
   }
 
-  // Use the full locale from the dropdown (e.g., "es-ES", "hi-IN")
-  // The API generally handles full locales well for accents.
   const targetLoc = toLangEl.value;
-
-  // Extract 2-letter language code for Google TTS (e.g., "hi" from "hi-IN")
   const langCode = targetLoc.split('-')[0];
 
-  // Switch to translate.google.com with client=tw-ob (often more reliable for simple requests)
+  // 1. Try Google TTS first
+  if (!playGoogleTTS(text, langCode)) {
+    // If it fails synchronously (unlikely), try Native
+    playNativeTTS(text, targetLoc);
+  }
+});
+
+function playGoogleTTS(text, langCode) {
   const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${langCode}&client=tw-ob`;
 
-  // Create an audio element and set referrerPolicy to avoid blocking on hosted sites
+  // Create audio element with referrerPolicy to try bypassing blocks
   const audio = document.createElement('audio');
   audio.referrerPolicy = 'no-referrer';
+  audio.crossOrigin = 'anonymous'; // Try CORS
   audio.src = url;
 
-  setStatus(`Playing audio (${targetLoc})…`, { live: true });
+  setStatus(`Playing audio (Google TTS: ${langCode})…`, { live: true });
 
   audio.onended = () => {
     setStatus('Done.', { live: false });
   };
 
   audio.onerror = (e) => {
-    console.error('Audio playback error', e);
-    setStatus('Error playing audio. Check network connection.', { error: true });
+    console.error('Google TTS prevented. Falling back to Native TTS.', e);
+    // Fallback to Native TTS
+    playNativeTTS(text, toLangEl.value);
   };
 
-  audio.play().catch(e => {
-    console.error('Play error', e);
-    setStatus('Playback failed: ' + e.message, { error: true });
-  });
-});
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(error => {
+      console.error('Google TTS playback failed:', error);
+      playNativeTTS(text, toLangEl.value);
+    });
+  }
+  return true; // Attempt initiated
+}
+
+function playNativeTTS(text, locale) {
+  if (!('speechSynthesis' in window)) {
+    setStatus('TTS fallback failed: Browser does not support Speech Synthesis.', { error: true });
+    return;
+  }
+
+  // Cancel distinct previous utterances
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = locale; // e.g., "es-ES"
+
+  // Optional: Try to find a matching voice (simple check)
+  const voices = window.speechSynthesis.getVoices();
+  const voice = voices.find(v => v.lang === locale) || voices.find(v => v.lang.startsWith(locale.split('-')[0]));
+  if (voice) utterance.voice = voice;
+
+  console.log(`Using Native TTS. Locale: ${locale}, Voice: ${voice ? voice.name : 'Default'}`);
+
+  setStatus(`Playing audio (Native TTS: ${locale})…`, { live: true });
+
+  utterance.onend = () => {
+    setStatus('Done.', { live: false });
+  };
+
+  utterance.onerror = (e) => {
+    console.error('Native TTS error:', e);
+    setStatus('Error playing audio (Native).', { error: true });
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
